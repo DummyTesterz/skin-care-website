@@ -1,0 +1,114 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LILLY Admin Panel</title>
+<style>
+*{box-sizing:border-box}body{font-family:Arial,sans-serif;background:#fff6fa;margin:0;color:#333}
+.wrap{max-width:1100px;margin:auto;padding:24px}.card{background:#fff;padding:22px;border-radius:16px;margin:18px 0;box-shadow:0 5px 22px #00000012}
+.top{display:flex;justify-content:space-between;align-items:center;gap:15px}.top button,.btn{border:0;border-radius:9px;padding:11px 16px;cursor:pointer;font-weight:700}
+.primary{background:#f22b80;color:#fff}.secondary{background:#f3e7ec;color:#6b3a4e}.danger{background:#ffe6ed;color:#b21f45}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}input,textarea,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:9px;font:inherit}textarea{min-height:90px;resize:vertical}
+.actions{display:flex;gap:9px;margin-top:12px}.actions>*{flex:1}.msg{padding:10px;border-radius:8px;margin:10px 0;display:none}.msg.show{display:block}.success{background:#eaf8ef;color:#287044}.error{background:#ffe9ee;color:#a52b4d}
+table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px solid #eee;text-align:left;vertical-align:top}.table-actions{display:flex;gap:7px}.table-actions button{border:0;padding:8px 10px;border-radius:7px;cursor:pointer}
+.ship-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.ship-item{padding:10px;background:#fff8fb;border:1px solid #f0dfe6;border-radius:9px}.ship-item label{display:block;font-weight:700;margin-bottom:6px}
+#login{max-width:420px;margin:8vh auto}.hint{font-size:13px;color:#777;line-height:1.5}
+
+.orders-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:15px}
+.order-card{border:1px solid #f0dfe6;border-radius:14px;padding:16px;margin:12px 0;background:#fff}
+.order-top{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid #eee;padding-bottom:12px;margin-bottom:12px}
+.order-number{font-size:18px;font-weight:800;color:#9c1550}
+.order-date{font-size:12px;color:#777;margin-top:4px}
+.status-badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#f7eaf0;color:#7d3151;font-size:12px;font-weight:800}
+.order-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.order-box{background:#fff8fb;border:1px solid #f4e3e9;border-radius:10px;padding:12px}
+.order-box h4{margin:0 0 8px;color:#7d3151}
+.order-item{padding:8px 0;border-bottom:1px solid #f1e7eb}
+.order-item:last-child{border-bottom:0}
+.order-total{margin-top:10px;font-size:16px;line-height:1.9}
+.order-status-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.order-status-actions button{border:0;padding:8px 11px;border-radius:8px;cursor:pointer;font-weight:700;background:#f3e7ec;color:#6b3a4e}
+.order-status-actions button.active{background:#f22b80;color:#fff}
+.order-status-actions button.cancel{background:#ffe6ed;color:#b21f45}
+.empty-orders{text-align:center;color:#888;padding:30px 10px;border:1px dashed #e7cfd9;border-radius:10px}
+@media(max-width:700px){.orders-head,.order-top{flex-direction:column}.order-grid{grid-template-columns:1fr}}
+
+@media(max-width:700px){.grid,.ship-grid{grid-template-columns:1fr}table{font-size:13px}.top{align-items:flex-start;flex-direction:column}}
+.more-menu{position:relative;display:inline-block}.more-menu summary{list-style:none;border:0;padding:8px 12px;border-radius:7px;cursor:pointer;font-weight:700;background:#f3e7ec;color:#6b3a4e}.more-menu summary::-webkit-details-marker{display:none}.more-menu-list{position:absolute;right:0;top:calc(100% + 5px);z-index:20;background:#fff;border:1px solid #eadde3;border-radius:9px;padding:6px;box-shadow:0 8px 25px #0002;min-width:120px}.more-menu-list button{display:block;width:100%;border:0;padding:9px;text-align:left;border-radius:6px;cursor:pointer;margin:2px 0}.more-menu-list .danger{background:#ffe6ed;color:#b21f45}.more-menu-list .secondary{background:#f3e7ec;color:#6b3a4e}</style>
+</head>
+<body>
+<div id="login" class="card">
+  <h1>LILLY Admin</h1>
+  <p class="hint">Set your email and password in the constants at the top of <b>admin.js</b>, then log in here.</p>
+  <form id="loginForm">
+    <input id="email" type="email" placeholder="Admin email" required>
+    <input id="password" type="password" placeholder="Password" required>
+    <button class="btn primary" style="width:100%;margin-top:10px">Login</button>
+  </form>
+  <div id="loginMsg" class="msg error"></div>
+</div>
+
+<div id="panel" class="wrap" hidden>
+  <div class="top"><h1>LILLY Admin Panel</h1><button id="logout" class="secondary">Logout</button></div>
+
+  <div class="card">
+    <h2 id="formTitle">Add Product</h2>
+    <form id="productForm">
+      <input type="hidden" id="productId">
+      <div class="grid">
+        <input id="name" placeholder="Product name" required>
+        <input id="category" placeholder="Category" value="Skincare">
+        <input id="price" type="number" step="0.01" min="0" placeholder="Price" required>
+        <input id="oldPrice" type="number" step="0.01" min="0" placeholder="Old price (optional)">
+        <input id="image" placeholder="Image path, e.g. assets/products/cleanser.jpg">
+        <input id="gallery" placeholder="Gallery paths, comma separated (optional)">
+        <input id="sizes" placeholder="Sizes, comma separated (optional)">
+        <input id="colors" placeholder="Colors, comma separated (optional)">
+        <textarea id="description" placeholder="Description"></textarea>
+        <label style="display:flex;align-items:center;gap:8px"><input id="bestseller" type="checkbox" style="width:auto"> Best Seller</label>
+      </div>
+      <div class="actions">
+        <button class="btn primary" type="submit">Save Product</button>
+        <button class="btn secondary" type="button" id="clearForm">Clear</button>
+      </div>
+    </form>
+    <div id="productMsg" class="msg success"></div>
+  </div>
+
+  <div class="card">
+    <h2>Products</h2>
+    <div style="overflow:auto">
+      <table><thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Actions</th></tr></thead>
+      <tbody id="productsTable"></tbody></table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Shipping Rates — Egypt</h2>
+    <p class="hint">Put the shipping price you want for each governorate. The checkout will update automatically when the customer selects a governorate.</p>
+    <div id="shippingGrid" class="ship-grid"></div>
+    <div class="actions">
+      <button class="btn primary" id="saveShipping">Save Shipping Rates</button>
+    </div>
+    <div id="shippingMsg" class="msg success"></div>
+  </div>
+
+
+  <div class="card" id="ordersSection">
+    <div class="orders-head">
+      <div>
+        <h2>🛍️ Orders</h2>
+        <p class="hint">Orders confirmed by customers are saved here automatically. Product names, prices, quantities and shipping are saved as a snapshot.</p>
+      </div>
+      <button class="btn secondary" id="refreshOrders" type="button">Refresh Orders</button>
+    </div>
+    <div id="ordersMsg" class="msg success"></div>
+    <div id="ordersList"></div>
+  </div>
+
+</div>
+<script src="/static/admin.js"></script>
+</body>
+</html>

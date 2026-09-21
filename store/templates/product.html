@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product | LILLY SKIN CARE</title>
+  <link rel="icon" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+  <div class="announcement">✨ Free Delivery Across Egypt ✨</div>
+  <header class="header">
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+    <a class="brand" href="index.html"><img src="assets/logo.png" alt="Lilly Skin Care"></a>
+    <nav class="nav" id="nav">
+      <a href="index.html#home">Home</a><a href="index.html#shop">Shop</a>
+      <a href="index.html#categories">Categories</a><a href="index.html#bundles">Bundles</a>
+      <a href="index.html#about">About Us</a><a href="index.html#contact">Contact</a>
+    </nav>
+    <div class="header-actions">
+      <a class="cart-btn" href="index.html#shop">🛍 <span id="cartCount">0</span></a>
+    </div>
+  </header>
+
+  <main class="detail-page">
+    <div class="breadcrumb"><a href="index.html">Home</a> / <span id="crumb">Product</span></div>
+    <section class="product-detail">
+      <div class="detail-gallery">
+        <div class="detail-thumbs" id="detailThumbs"></div>
+        <div class="detail-main-image" id="detailMainImage"></div>
+      </div>
+
+      <div class="detail-info">
+        <p class="eyebrow" id="detailCategory">LILLY</p>
+        <h1 id="detailName">Product</h1>
+        <div class="detail-price" id="detailPrice">EGP 0</div>
+        <p class="detail-description" id="detailDescription"></p>
+
+        <div class="option-group">
+          <label>Size</label>
+          <div class="option-buttons" id="sizeOptions"></div>
+        </div>
+
+        <div class="option-group">
+          <label>Color</label>
+          <div class="option-buttons" id="colorOptions"></div>
+        </div>
+
+        <div class="detail-qty">
+          <b>Quantity</b>
+          <button id="minus">−</button><span id="qty">1</span><button id="plus">+</button>
+        </div>
+
+        <button class="primary-btn detail-add" id="detailAdd">ADD TO CART</button>
+        <div class="detail-message" id="detailMessage"></div>
+        <a class="back-link" href="index.html#shop">← Continue Shopping</a>
+      </div>
+    </section>
+  </main>
+
+{{ products|json_script:"lilly-products-data" }}
+{{ shipping|json_script:"lilly-shipping-data" }}
+<script>
+window.LILLY_API_BASE = "/api";
+window.LILLY_PRODUCTS = JSON.parse(document.getElementById("lilly-products-data").textContent);
+window.LILLY_SHIPPING = JSON.parse(document.getElementById("lilly-shipping-data").textContent);
+</script>
+<script src="/static/script.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const productId = Number(params.get("id"));
+const product = products.find(p => p.id === productId) || products[0];
+
+const $ = id => document.getElementById(id);
+function renderMoney(v){ return "EGP " + Number(v || 0).toLocaleString("en-EG"); }
+
+$("detailCategory").textContent = product.category.toUpperCase();
+$("detailName").textContent = product.name;
+$("crumb").textContent = product.name;
+$("detailPrice").textContent = renderMoney(product.price);
+$("detailDescription").textContent = product.description;
+
+const gallery = (product.gallery && product.gallery.length)
+  ? product.gallery
+  : (product.image ? [product.image] : []);
+
+function showImage(src) {
+  $("detailMainImage").innerHTML = src
+    ? `<img src="${src}" alt="${product.name}">`
+    : `<div class="detail-placeholder">${product.name}<br><small>ADD PRODUCT IMAGE</small></div>`;
+}
+showImage(gallery[0] || "");
+$("detailThumbs").innerHTML = gallery.length
+  ? gallery.map((src,i) => `<button class="detail-thumb" onclick="showImage('${src}')"><img src="${src}" alt=""></button>`).join("")
+  : "";
+
+let selectedSize = product.sizes?.[0] || "";
+let selectedColor = product.colors?.[0] || "";
+let quantity = 1;
+
+function options(container, values, selected, setter) {
+  $(container).innerHTML = (values || []).map(v =>
+    `<button type="button" class="option-btn ${v === selected ? "selected" : ""}" data-value="${v}">${v}</button>`
+  ).join("");
+  $(container).querySelectorAll(".option-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      setter(btn.dataset.value);
+      $(container).querySelectorAll(".option-btn").forEach(x => x.classList.remove("selected"));
+      btn.classList.add("selected");
+    });
+  });
+}
+options("sizeOptions", product.sizes || [], selectedSize, v => selectedSize = v);
+options("colorOptions", product.colors || [], selectedColor, v => selectedColor = v);
+
+$("minus").onclick = () => { quantity = Math.max(1, quantity - 1); $("qty").textContent = quantity; };
+$("plus").onclick = () => { quantity++; $("qty").textContent = quantity; };
+
+$("detailAdd").onclick = () => {
+  const cart = JSON.parse(localStorage.getItem("lillyCart") || "[]");
+  const existing = cart.find(item => item.id === product.id && item.size === selectedSize && item.color === selectedColor);
+  if (existing) existing.qty += quantity;
+  else cart.push({id: product.id, qty: quantity, size: selectedSize, color: selectedColor});
+  localStorage.setItem("lillyCart", JSON.stringify(cart));
+  $("cartCount").textContent = cart.reduce((sum,item) => sum + item.qty, 0);
+  $("detailMessage").textContent = "Added to your cart ✓";
+};
+
+$("cartCount").textContent = JSON.parse(localStorage.getItem("lillyCart") || "[]")
+  .reduce((sum,item) => sum + item.qty, 0);
+</script>
+</body>
+</html>

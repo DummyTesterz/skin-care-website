@@ -1,0 +1,271 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LILLY SKIN CARE</title>
+  <link rel="icon" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+  <div class="announcement">✨ Fast Delivery  ✨</div> 
+
+  <header class="header">
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+    <a class="brand" href="#home">
+      <img src="{% static 'assets/logo-transparent.png' %}" alt="Lilly Skin Care">
+    </a>
+
+    <nav class="nav" id="nav">
+      <a href="#home">Home</a>
+      <a href="#shop">Shop</a>
+      <a href="#categories">Categories</a>
+      <a href="#bundles">Bundles</a>
+      <a href="#about">About Us</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <button id="searchBtn" class="icon-btn" title="Search">⌕</button>
+      <button id="cartBtn" class="cart-btn">🛍️ <span id="cartCount">0</span></button>
+    </div>
+  </header>
+
+  <div class="search-box" id="searchBox">
+    <input id="searchInput" type="search" placeholder="Search products...">
+  </div>
+
+  <main>
+    <!-- HOME AUTO SLIDER
+         Put your 4 home images in /static/assets/ and name them: home1.jpg, home2.jpg, home3.jpg, home4.jpg
+         You can also change the file names in the src attributes below.
+    -->
+    <section class="hero home-gallery" id="home">
+      <div class="home-slider" id="homeSlider">
+        <div class="home-slide active">
+          <img src="assets/home01.jpeg" alt="Lilly Skin Care - Home 1" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="home-image-fallback">ADD IMAGE 1<br><small>/static/assets/home1.jpeg</small></div>
+        </div>
+        <div class="home-slide">
+          <img src="assets/home02.jpeg" alt="Lilly Skin Care - Home 2" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="home-image-fallback">ADD IMAGE 2<br><small>/static/assets/home2.jpeg</small></div>
+        </div>
+        <div class="home-slide">
+          <img src="assets/home03.jpeg" alt="Lilly Skin Care - Home 3" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="home-image-fallback">ADD IMAGE 3<br><small>/static/assets/home3.jpeg</small></div>
+        </div>
+        <div class="home-slide">
+          <img src="assets/home4.jpeg" alt="Lilly Skin Care - Home 4" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="home-image-fallback">ADD IMAGE 4<br><small>/static/assets/home4.jpg</small></div>
+        </div>
+
+        <button class="slider-arrow slider-prev" id="sliderPrev" aria-label="Previous image">‹</button>
+        <button class="slider-arrow slider-next" id="sliderNext" aria-label="Next image">›</button>
+        <div class="slider-dots" id="sliderDots" aria-label="Choose home image"></div>
+      </div>
+    </section>
+
+    <section class="section" id="shop">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">OUR FAVORITES</p>
+          <h2>Best Sellers</h2>
+        </div>
+        <a href="#all-products" class="text-link">View all →</a>
+      </div>
+      <div class="product-grid" id="bestSellerGrid"></div>
+    </section>
+
+    <section class="category-section" id="categories">
+      <div class="section-heading centered">
+        <p class="eyebrow">EXPLORE</p>
+        <h2>Shop by Category</h2>
+      </div>
+      <div class="category-grid">
+        <button class="category-card" data-category="Body Care">
+        
+    <div class="category-placeholder">
+        <img src="assets/Body Care.jpeg" alt="Body Care">
+    </div>
+    <span>Body Care</span>
+</button>
+        </button>
+        <button class="category-card" data-category="Cosmetics">
+         
+    <div class="category-placeholder">
+        <img src="assets/skincare.jpg" alt="Cosmetics">
+    </div>
+    <span>Cosmetics →</span>
+</button>
+        </button>
+        <button class="category-card" data-category="Bundles">
+          
+    <div class="category-placeholder">
+        <img src="assets/skincare.jpg" alt="Bundles">
+    </div>
+    <span>bundles →</span>
+</button>
+        </button>
+        <button class="category-card" data-category="Bestseller">
+          
+    <div class="category-placeholder">
+        <img src="assets/skincare.jpg" alt="Bestseller">
+    </div>
+    <span>Bestseller →</span>
+</button>
+        </button>
+      </div>
+    </section>
+
+    <section class="pink-banner" id="bundles">
+      <div>
+        <p class="eyebrow">LILLY COLLECTION</p>
+        <h2>Glow More.<br>Love Your Skin.</h2>
+        <p>Build your perfect routine with your favorite Lilly products.</p>
+        <a class="light-btn" href="#all-products">SHOP THE COLLECTION</a>
+      </div>
+      <div class="banner-bubbles">
+        <span>✦</span><span>♡</span><span>✧</span>
+      </div>
+    </section>
+
+    <section class="section" id="all-products">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">DISCOVER LILLY</p>
+          <h2>All Products</h2>
+        </div>
+        <select id="categoryFilter" class="filter">
+          <option value="All">All Categories</option>
+          <option value="Body Care">Body Care</option>
+          <option value="Cosmetics">Cosmetics</option>
+          <option value="Bestseller">Bestseller</option>
+      
+          <option value="Bundles">Bundles</option>
+        </select>
+      </div>
+      <div class="product-grid" id="allProductGrid"></div>
+      <div class="show-more-wrap">
+        <button class="show-more-btn" id="showMoreProducts" type="button">Show More</button>
+      </div>
+    </section>
+
+    <section class="about" id="about">
+      <div class="about-image"><img src="assets/logo-transparent.png" alt="Lilly Skin Care logo"></div>
+      <div class="about-copy">
+        <p class="eyebrow">ABOUT LILLY</p>
+        <h2>Beauty that feels like you.</h2>
+        <p>LILLY SKIN CARE is an Egyptian beauty brand focused on simple, beautiful and effective essentials for your routine.</p>
+        <p>Natural-inspired. Cruelty-free. Made with love.</p>
+        <a class="primary-btn" href="#shop">DISCOVER LILLY <span>→</span></a>
+      </div>
+    </section>
+
+    <section class="reviews">
+      <div class="section-heading centered">
+        <p class="eyebrow">LOVE NOTES</p>
+        <h2>Our Customers</h2>
+      </div>
+      <div class="review-slider" id="reviewSlider">
+        <div class="review-track" id="reviewTrack">
+          <article><img src="assets/review1.jpeg" alt="Review 1"></article>
+          <article><img src="assets/review2.jpeg" alt="Review 2"></article>
+          <article><img src="assets/review3.jpeg" alt="Review 3"></article>
+          <article><img src="assets/review4.jpeg" alt="Review 4"></article>
+          <article><img src="assets/review5.jpeg" alt="Review 5"></article>
+        </div>
+        <button class="review-arrow review-prev" id="reviewPrev" aria-label="Previous customer review">‹</button>
+        <button class="review-arrow review-next" id="reviewNext" aria-label="Next customer review">›</button>
+        <div class="review-dots" id="reviewDots" aria-label="Choose customer review"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contact">
+    <div class="footer-main">
+      <div>
+        <img src="assets/logo-transparent.png" class="footer-logo" alt="Lilly Skin Care">
+        <p>Natural beauty essentials to level up your routine.</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <a href="#home">Home</a><a href="#shop">Shop</a><a href="#about">About Us</a><a href="#contact">Contact</a>
+      </div>
+      <div>
+        <h4>Customer Care</h4>
+        <a href="#">Shipping & Delivery</a><a href="#">Returns</a><a href="#">FAQ</a>
+      </div>
+      <div>
+        <h4>Follow Us</h4>
+        <a href="#" target="_blank">Instagram</a>
+        <a href="#" target="_blank">TikTok</a>
+        <a href="mailto:hello@lillyskincare.eg">Email Us</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 LILLY SKIN CARE. All rights reserved.</div>
+  </footer>
+
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-head"><h3>Your Cart</h3><button id="closeCart">×</button></div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer">
+      <div class="total-row"><span>Subtotal</span><strong id="cartTotal">EGP 0</strong></div>
+      <button class="primary-btn checkout-btn" id="checkoutBtn">ORDER NOW</button>
+      <p class="small-note">Your order will be sent directly to WhatsApp after you fill in your details.</p>
+    </div>
+  </aside>
+  <div class="overlay" id="overlay"></div>
+
+  <div class="modal" id="checkoutModal">
+    <div class="modal-card">
+      <button class="modal-close" id="closeModal">×</button>
+      <p class="eyebrow">ORDER DETAILS</p>
+      <h2>Complete Your Order</h2>
+      <form id="checkoutForm">
+        <input required name="name" placeholder="Full name">
+        <input required name="phone" placeholder="Phone number">
+        <input required name="address" placeholder="Full address">
+        <select required name="city" id="checkoutCity">
+          <option value="">Select Governorate</option>
+          <option value="Cairo">Cairo</option><option value="Giza">Giza</option>
+          <option value="Alexandria">Alexandria</option><option value="Qalyubia">Qalyubia</option>
+          <option value="Port Said">Port Said</option><option value="Suez">Suez</option>
+          <option value="Damietta">Damietta</option><option value="Dakahlia">Dakahlia</option>
+          <option value="Sharqia">Sharqia</option><option value="Kafr El Sheikh">Kafr El Sheikh</option>
+          <option value="Gharbia">Gharbia</option><option value="Monufia">Monufia</option>
+          <option value="Beheira">Beheira</option><option value="Ismailia">Ismailia</option>
+          <option value="Faiyum">Faiyum</option><option value="Beni Suef">Beni Suef</option>
+          <option value="Minya">Minya</option><option value="Asyut">Asyut</option>
+          <option value="Sohag">Sohag</option><option value="Qena">Qena</option>
+          <option value="Luxor">Luxor</option><option value="Aswan">Aswan</option>
+          <option value="Red Sea">Red Sea</option><option value="New Valley">New Valley</option>
+          <option value="Matrouh">Matrouh</option><option value="North Sinai">North Sinai</option>
+          <option value="South Sinai">South Sinai</option>
+        </select>
+        <div class="checkout-summary" id="checkoutSummary">
+          <div><span>Subtotal</span><strong id="checkoutSubtotal">EGP 0</strong></div>
+          <div><span>Shipping</span><strong id="checkoutShipping">EGP 0</strong></div>
+          <div><span>Total</span><strong id="checkoutTotal">EGP 0</strong></div>
+        </div>
+        <textarea name="notes" placeholder="Order notes (optional)"></textarea>
+        <button class="primary-btn" type="submit">CONFIRM ORDER</button>
+      </form>
+      <div id="orderMessage" class="order-message"></div>
+    </div>
+  </div>
+
+  {{ products|json_script:"lilly-products-data" }}
+{{ shipping|json_script:"lilly-shipping-data" }}
+<script>
+window.LILLY_API_BASE = "/api";
+window.LILLY_PRODUCTS = JSON.parse(document.getElementById("lilly-products-data").textContent);
+window.LILLY_SHIPPING = JSON.parse(document.getElementById("lilly-shipping-data").textContent);
+</script>
+<script src="{% static 'script.js' %}"></script>
+</body>
+</html>
